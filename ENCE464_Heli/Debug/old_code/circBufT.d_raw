@@ -1,0 +1,6 @@
+old_code\circBufT.obj: ../old_code/circBufT.c
+old_code\circBufT.obj: ..\old_code\circbufT.h
+old_code\circBufT.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.6.LTS/include/stdint.h
+old_code\circBufT.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.6.LTS/include/stdlib.h
+old_code\circBufT.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.6.LTS/include/linkage.h
+old_code\circBufT.obj: ..\old_code\circBufT.h

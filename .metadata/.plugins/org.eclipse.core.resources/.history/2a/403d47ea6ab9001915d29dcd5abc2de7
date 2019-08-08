@@ -1,0 +1,65 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+SHELL = cmd.exe
+
+# Add inputs and outputs from these tool invocations to the build variables 
+CMD_SRCS += \
+../freertos_demo_ccs.cmd 
+
+C_SRCS += \
+../buttons4.c \
+../circBufT.c \
+../init.c \
+../led_task.c \
+../main.c \
+../startup_ccs.c \
+../switch_task.c 
+
+C_DEPS += \
+./buttons4.d \
+./circBufT.d \
+./init.d \
+./led_task.d \
+./main.d \
+./startup_ccs.d \
+./switch_task.d 
+
+OBJS += \
+./buttons4.obj \
+./circBufT.obj \
+./init.obj \
+./led_task.obj \
+./main.obj \
+./startup_ccs.obj \
+./switch_task.obj 
+
+OBJS__QUOTED += \
+"buttons4.obj" \
+"circBufT.obj" \
+"init.obj" \
+"led_task.obj" \
+"main.obj" \
+"startup_ccs.obj" \
+"switch_task.obj" 
+
+C_DEPS__QUOTED += \
+"buttons4.d" \
+"circBufT.d" \
+"init.d" \
+"led_task.d" \
+"main.d" \
+"startup_ccs.d" \
+"switch_task.d" 
+
+C_SRCS__QUOTED += \
+"../buttons4.c" \
+"../circBufT.c" \
+"../init.c" \
+"../led_task.c" \
+"../main.c" \
+"../startup_ccs.c" \
+"../switch_task.c" 
+
+

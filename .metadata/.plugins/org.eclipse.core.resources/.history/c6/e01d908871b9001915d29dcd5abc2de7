@@ -1,0 +1,59 @@
+/*
+ * Task_LED.c
+ *
+ *  Created on: 8/08/2019
+ *      Author: sly31
+ */
+#include "main.h"
+
+xQueueHandle g_pLEDQueue;
+extern xSemaphoreHandle g_pUARTSemaphore;
+static uint32_t g_pui32Colors[3] = { 0x0000, 0x0000, 0x0000 };
+static uint8_t g_ui8ColorsIndx;
+
+
+static void LEDTask(void *pvParameters) {
+    portTickType ui32WakeTime;
+    uint32_t ui32LEDToggleDelay;
+    uint8_t i8Message;
+
+    ui32LEDToggleDelay = LED_TOGGLE_DELAY;
+    ui32WakeTime = xTaskGetTickCount();    // Get the current tick count.
+
+    while(1) {
+        if(xQueueReceive(g_pLEDQueue, &i8Message, 0) == pdPASS) {
+            if(i8Message == LEFT_BUTTON) {
+
+                g_pui32Colors[g_ui8ColorsIndx] = 0x0000;
+                g_ui8ColorsIndx = g_ui8ColorsIndx++ % 2;
+                g_pui32Colors[g_ui8ColorsIndx] = 0x8000;
+                RGBColorSet(g_pui32Colors);
+
+                xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
+                xSemaphoreGive(g_pUARTSemaphore);
+            } else if(i8Message == RIGHT_BUTTON) {
+
+                ui32LEDToggleDelay = ui32LEDToggleDelay * 2 % 1000;
+
+                xSemaphoreTake(g_pUARTSemaphore, portMAX_DELAY);
+                xSemaphoreGive(g_pUARTSemaphore);
+            }
+        }
+        RGBEnable();        // Turn on the LED.
+        vTaskDelayUntil(&ui32WakeTime, ui32LEDToggleDelay / portTICK_RATE_MS);        // Wait for the required amount of time.
+        RGBDisable();        // Turn off the LED.
+        vTaskDelayUntil(&ui32WakeTime, ui32LEDToggleDelay / portTICK_RATE_MS);        // Wait for the required amount of time.
+    }
+}
+
+uint32_t LEDTaskInit(void) {
+    SysCtlPeripheralEnable(RED_GPIO_PERIPH);
+    SysCtlPeripheralEnable(GREEN_GPIO_PERIPH);
+    SysCtlPeripheralEnable(BLUE_GPIO_PERIPH);
+
+    g_pLEDQueue = xQueueCreate(LED_QUEUE_SIZE, LED_ITEM_SIZE);     // Create a queue for sending messages to the LED task.
+    if(xTaskCreate(LEDTask, (const portCHAR *)"LED", LEDTASKSTACKSIZE, NULL,
+                   tskIDLE_PRIORITY + PRIORITY_LED_TASK, NULL) != pdTRUE) {return(1);}
+    return(0);
+
+}

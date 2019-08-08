@@ -1,0 +1,11 @@
+/*
+ * Task_LED.c
+ *
+ *  Created on: 8/08/2019
+ *      Author: sly31
+ */
+#include "main.h"
+
+xQueueHandle g_pLEDQueue;
+extern xSemaphoreHandle g_pUARTSemaphore;
+

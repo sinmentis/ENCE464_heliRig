@@ -1,0 +1,83 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+SHELL = cmd.exe
+
+# Add inputs and outputs from these tool invocations to the build variables 
+CMD_SRCS += \
+../freertos_demo_ccs.cmd 
+
+C_SRCS += \
+../Task_LED.c \
+../buttons4.c \
+../circBufT.c \
+../init.c \
+../led_task.c \
+../main.c \
+../motion.c \
+../startup_ccs.c \
+../switch_task.c \
+../uart_display.c 
+
+C_DEPS += \
+./Task_LED.d \
+./buttons4.d \
+./circBufT.d \
+./init.d \
+./led_task.d \
+./main.d \
+./motion.d \
+./startup_ccs.d \
+./switch_task.d \
+./uart_display.d 
+
+OBJS += \
+./Task_LED.obj \
+./buttons4.obj \
+./circBufT.obj \
+./init.obj \
+./led_task.obj \
+./main.obj \
+./motion.obj \
+./startup_ccs.obj \
+./switch_task.obj \
+./uart_display.obj 
+
+OBJS__QUOTED += \
+"Task_LED.obj" \
+"buttons4.obj" \
+"circBufT.obj" \
+"init.obj" \
+"led_task.obj" \
+"main.obj" \
+"motion.obj" \
+"startup_ccs.obj" \
+"switch_task.obj" \
+"uart_display.obj" 
+
+C_DEPS__QUOTED += \
+"Task_LED.d" \
+"buttons4.d" \
+"circBufT.d" \
+"init.d" \
+"led_task.d" \
+"main.d" \
+"motion.d" \
+"startup_ccs.d" \
+"switch_task.d" \
+"uart_display.d" 
+
+C_SRCS__QUOTED += \
+"../Task_LED.c" \
+"../buttons4.c" \
+"../circBufT.c" \
+"../init.c" \
+"../led_task.c" \
+"../main.c" \
+"../motion.c" \
+"../startup_ccs.c" \
+"../switch_task.c" \
+"../uart_display.c" 
+
+
