@@ -1,1 +1,65 @@
-README
+The project is based on FreeRTOS and applied with OOD(Object Oriented Design)
+
+The list of struct are shown below:
+
+typedef struct {
+	int SYSIO;
+	int BASEIO;
+	int EN;
+} IOPort;
+
+typedef struct {
+	int SYSPWM;
+	int BASEPWM;
+	int EN;
+} PWM;
+
+typedef struct {
+	PWM PWMCORE;
+	int GEN;
+	int OUT;
+} pwmChan;
+
+typedef struct {
+	IOPort io_port;
+	int io_pin;
+	int io_config;
+	int io_status;
+} digPin;
+
+typedef struct {
+	pwmChan io_pwm;
+	digPin  io_pin;
+	int io_gen;
+	int period;
+	int duty;
+} pwmPin;
+
+typedef struct {
+	int io_SYSADC;
+	int io_BASEADC;
+	int io_channel;
+	digPin io_pin;
+	int val;
+} adcPin;
+
+typedef struct{
+	digPin A;
+	digPin B;
+	int count;
+	uint8_t state;
+} encoder;
+
+typedef struct{
+    int diff;
+    int last_diff;
+    int total_diff;
+
+    float constant_gain;
+
+    float Kp;
+    float Ki;
+    float Kd;
+
+    int PID_out;
+} PID_controller;

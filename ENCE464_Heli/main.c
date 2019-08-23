@@ -1,11 +1,6 @@
 #include "main.h"
 
 //*****************************************************************************
-// The mutex that protects concurrent access of UART from multiple tasks.
-//*****************************************************************************
-xSemaphoreHandle g_pUARTSemaphore;
-
-//*****************************************************************************
 // The error routine that is called if the driver library encounters an error.
 //*****************************************************************************
 #ifdef DEBUG
@@ -15,160 +10,41 @@ __error__(char *pcFilename, uint32_t ui32Line){}
 
 //*****************************************************************************
 // This hook is called by FreeRTOS when an stack overflow error is detected.
+// This function can not return, so loop forever.  Interrupts are disabled
+// on entry to this function, so no processor interrupts will interrupt
+// this loop.
 //*****************************************************************************
-void
-vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName)
-{
-    // This function can not return, so loop forever.  Interrupts are disabled
-    // on entry to this function, so no processor interrupts will interrupt
-    // this loop.
-    while(1){}
-}
-
-//*****************************************************************************
-// Configure the UART and its pins.  This must be called before UARTprintf().
-//*****************************************************************************
-void
-ConfigureUART(void)
-{
-    //
-    // Enable the GPIO Peripheral used by the UART.
-    //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
-
-    //
-    // Enable UART0
-    //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
-
-    //
-    // Configure GPIO Pins for UART mode.
-    //
-    ROM_GPIOPinConfigure(GPIO_PA0_U0RX);
-    ROM_GPIOPinConfigure(GPIO_PA1_U0TX);
-    ROM_GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-
-    //
-    // Use the internal 16MHz oscillator as the UART clock source.
-    //
-    UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
-
-    //
-    // Initialize the UART for console I/O.
-    //
-    UARTStdioConfig(0, 115200, 16000000);
-}
-
+void vApplicationStackOverflowHook(xTaskHandle *pxTask, char *pcTaskName){while(1){}}
+void vApplicationIdleHook(){}
+void vApplicationTickHook(){}
+void vApplicationMallocFailedHook(){while(1){}}
 
 //*****************************************************************************
-// Configure the ADC and GPIO.  Int and operating global variable.
+//                                      MAIN
 //*****************************************************************************
 
-void ADCIntHandler(void)
-{
-    uint32_t ulValue;
-    ADCSequenceDataGet(ADC0_BASE, 3, &ulValue); //read from adc
-    writeCircBuf (&g_inBuffer, ulValue);
-    ADCIntClear(ADC0_BASE, 3);
-}
-
-void initADC (void)
-{
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
-    ADCSequenceConfigure(ADC0_BASE, 3, ADC_TRIGGER_PROCESSOR, 0);
-    ADCSequenceStepConfigure(ADC0_BASE, 3, 0, ADC_CTL_CH9 | ADC_CTL_IE |
-                             ADC_CTL_END);
-    ADCSequenceEnable(ADC0_BASE, 3);
-    ADCIntRegister (ADC0_BASE, 3, ADCIntHandler);
-    ADCIntEnable(ADC0_BASE, 3);
-}
-
-void YawIntHandler(void)
-{
-    phase_A = GPIOPinRead(GPIO_PORTB_BASE, GPIO_INT_PIN_0);
-    phase_B = GPIOPinRead(GPIO_PORTB_BASE, GPIO_INT_PIN_1);
-    if((last_state_A == 0 && last_state_B == 0) && (phase_A == 1 && phase_B == 0)){yaw_count--;}
-    else if((last_state_A == 0 && last_state_B == 0) && (phase_A == 0 && phase_B == 1)){yaw_count++;}
-
-    else if((last_state_A == 0 && last_state_B == 1) && (phase_A == 0 && phase_B == 0)){yaw_count--;}
-    else if((last_state_A == 0 && last_state_B == 1) && (phase_A == 1 && phase_B == 1)){yaw_count++;}
-
-    else if((last_state_A == 1 && last_state_B == 0) && (phase_A == 0 && phase_B == 0)){yaw_count++;}
-    else if((last_state_A == 1 && last_state_B == 0) && (phase_A == 1 && phase_B == 1)){yaw_count--;}
-
-    else if((last_state_A == 1 && last_state_B == 1) && (phase_A == 1 && phase_B == 0)){yaw_count++;}
-    else if((last_state_A == 1 && last_state_B == 1) && (phase_A == 0 && phase_B == 1)){yaw_count--;}
-    last_state_A = phase_A;
-    last_state_B = phase_B;
-    GPIOIntClear(GPIO_PORTB_BASE,GPIO_INT_PIN_0 | GPIO_INT_PIN_1);
-}
-
-void SWIntHandler(void)
-{
-    if(sys_init_flag == 0)                                                            // if the system was not initialized
-    {
-        while(GPIOPinRead(GPIO_PORTA_BASE, GPIO_PIN_7) == GPIO_PIN_7){initSwitch();}  // the SW_1 was blocked and the system stops processing
-    }
-    if(GPIOPinRead(GPIO_PORTA_BASE, GPIO_PIN_7) == GPIO_PIN_7){SW_on_flag = 1;}       // toggle the state of the switch
-    else {SW_on_flag = 0;}
-    GPIOIntClear(GPIO_PORTA_BASE, GPIO_INT_PIN_7);
-}
-
-/*
- * Only called once when calibration
- */
-void PhaseCIntHandler(void)
-{
-    phase_C = 1; // Read yaw ref
-    yaw_count = 0; // set the reference point to 0
-    GPIOIntClear(GPIO_PORTC_BASE, GPIO_INT_PIN_4);
-}
-
-
-void initGPIO(void)
-{
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOC);
-
-    GPIOPinTypeGPIOInput(GPIO_PORTA_BASE, GPIO_PIN_7);
-    GPIOPinTypeGPIOInput(GPIO_PORTB_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-    GPIOPinTypeGPIOInput(GPIO_PORTC_BASE, GPIO_PIN_4);
-
-    GPIOIntRegister(GPIO_PORTB_BASE, YawIntHandler);
-    GPIOIntRegister(GPIO_PORTA_BASE, SWIntHandler);
-    GPIOIntRegister(GPIO_PORTC_BASE, PhaseCIntHandler);
-
-    GPIOIntTypeSet(GPIO_PORTB_BASE, GPIO_PIN_0 | GPIO_PIN_1, GPIO_BOTH_EDGES);
-    GPIOIntTypeSet(GPIO_PORTA_BASE, GPIO_PIN_7, GPIO_BOTH_EDGES);
-    GPIOIntTypeSet(GPIO_PORTC_BASE, GPIO_PIN_4, GPIO_BOTH_EDGES);
-
-    GPIOIntEnable(GPIO_PORTB_BASE, GPIO_INT_PIN_0 | GPIO_INT_PIN_1);
-    GPIOIntEnable(GPIO_PORTA_BASE, GPIO_INT_PIN_7);
-    GPIOIntEnable(GPIO_PORTC_BASE, GPIO_INT_PIN_4);
-}
-
-//*****************************************************************************
-// Initialize FreeRTOS and start the initial set of tasks.
-//*****************************************************************************
 int main(void)
 {
-    // Initialize
-    initClock();
+    // Init the clock
+    SysCtlClockSet( SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ );
 
-    // Create a mutex to guard the UART.
-    g_pUARTSemaphore = xSemaphoreCreateMutex();
+    // Create semaphore and mutex
+    g_pUARTMutex = xSemaphoreCreateBinary();
+    xSemaphoreHandle adcMutex = xSemaphoreCreateBinary();
+    xSemaphoreHandle* sensorTaskParam = (xSemaphoreHandle*) {g_pUARTMutex, adcMutex};
 
-    /* Example Code
-    if(LEDTaskInit() != 0){while(1){}}
-    if(SwitchTaskInit() != 0){while(1){}}
-    */
+    // Create Queue for current Height and Yaw.
+    g_height_Queue = xQueueCreate(DATA_QUEUE_LENGTH, DATA_QUEUE_ITEM_SIZE);
+    g_yaw_Queue = xQueueCreate(DATA_QUEUE_LENGTH, DATA_QUEUE_ITEM_SIZE);
 
-    if(LEDTaskInit() != 0){while(1){}}
+    // Create tasks
+    xTaskCreate(controllerTask, "controller Task",  128,    g_pUARTMutex,   PRIORITY_CONTROLLER_TASK,  NULL);
+    xTaskCreate(sensorTask,     "sensor Task",      128,    sensorTaskParam,PRIORITY_SENSOR_TASK,  NULL);
+    xTaskCreate(uartTask,       "UI Task",          1024,   adcMutex,       PRIORITY_UART_TASK,  NULL);
 
-    // Start the scheduler.  This should not return.
+    // Start the scheduler.
     vTaskStartScheduler();
 
-    // In case the scheduler returns for some reason, print an error and loop forever.
+    // Never Enter this line.
     while(1){}
 }

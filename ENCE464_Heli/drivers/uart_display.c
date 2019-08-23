@@ -1,10 +1,10 @@
-#include "uart_display.h"
+#include <drivers/uart_display.h>
 
 //********************************************************
 // initialiseUSB_UART - 8 bits, 1 stop bit, no parity
 //********************************************************
 void
-initialiseUSB_UART (void)
+uartInit (void)
 {
     //
     // Enable GPIO port A which is used for UART0 pins.
@@ -27,7 +27,7 @@ initialiseUSB_UART (void)
 // Transmit a string via UART0
 //**********************************************************************
 void
-UARTSend (char *pucBuffer)
+uartSend (char *pucBuffer)
 {
     // Loop while there are more characters to send.
     while(*pucBuffer)

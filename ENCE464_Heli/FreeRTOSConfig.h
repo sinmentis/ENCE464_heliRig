@@ -81,8 +81,8 @@
 #define configUSE_MUTEXES                   1
 #define configUSE_RECURSIVE_MUTEXES         1
 #define configCHECK_FOR_STACK_OVERFLOW      2
-
-#define configMAX_PRIORITIES                16
+#define configSUPPORT_DYNAMIC_ALLOCATION    1
+#define configMAX_PRIORITIES                6
 #define configMAX_CO_ROUTINE_PRIORITIES     ( 2 )
 #define configQUEUE_REGISTRY_SIZE           10
 

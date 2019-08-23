@@ -1,66 +1,72 @@
-/*
- * main.h
- *
- *  Created on: 8/08/2019
- *      Author: sly31
- */
-
 #ifndef MAIN_H_
 #define MAIN_H_
 
-#include "stdint.h"
-#include "stdbool.h"
+#include <stdint.h>
+#include <stdbool.h>
 #include "stdlib.h"
-#include "inc/hw_memmap.h"
-#include "inc/hw_types.h"
-#include "inc/tm4c123gh6pm.h"
-#include "driverlib/adc.h"
-#include "driverlib/pwm.h"
-#include "driverlib/pin_map.h"
-#include "driverlib/gpio.h"
-#include "driverlib/uart.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/systick.h"
-#include "driverlib/interrupt.h"
-#include "driverlib/debug.h"
-#include "utils/ustdlib.h"
-#include "circBufT.h"
-#include "buttons4.h"
-#include "init.h"
 
-#include "led_task.h"
-#include "switch_task.h"
+// Drivers
+#include "inc/hw_memmap.h"
+#include "inc/hw_sysctl.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/interrupt.h"
+#include "inc/tm4c123gh6pm.h"
+#include "drivers/PIO.h"
+#include "drivers/PID.h"
+#include "drivers/HwDef.h"
+#include "drivers/PWM.h"
+#include "drivers/ADC.h"
+#include "drivers/uart_display.h"
+
+// FreeRTOS
 #include "FreeRTOS.h"
-#include "motion.h"
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
-#include "uart_display.h"
+#include "priorities.h"
 
-#include "Task_LED.c"
-
-#define BUF_SIZE 10
-#define SAMPLE_RATE_HZ 60
-
-static circBuf_t g_inBuffer;    // Buffer of size BUF_SIZE integers (sample values)
-static uint32_t g_ulSampCnt;    // Counter for the interrupts
-static int32_t yaw_count;          // Use to store total number
-static volatile bool phase_A;
-static volatile bool phase_B;
-static volatile bool phase_C = 0;
-static volatile bool last_state_A;
-static volatile bool last_state_B;
-static volatile bool sys_init_flag = 0;
-static volatile bool SW_on_flag = 0;
-static volatile bool land_flag = 1;
-static volatile bool calibration_flag = 0;
-static int32_t base_line = 0;
-static int32_t mean_ADC = 0;
-static int32_t height_percen = 0;
-static int32_t yaw_degree = 0;
-static int32_t dest_height = 0;
-static int32_t dest_yaw = 0;
+// Tasks
+#include "tasks/gTaskController.h"
+#include "tasks/gTaskSensor.h"
+#include "tasks/gTaskUART.h"
 
 
+// Head define for semaphore, mutex and queue
+#define DATA_QUEUE_LENGTH               1
+#define DATA_QUEUE_ITEM_SIZE            sizeof(uint32_t)
+#define SEMAPHORE_MAX_COUNT         3
+#define COUNTING_SEMAPHORE_INIT_COUNT   0
 
-#endif /* MAIN_H_ */
+//*****************************************************************************
+// Variables
+//*****************************************************************************
+
+IOPort PA = {SYSIOA,PORTA_BASE,0};
+IOPort PB = {SYSIOB,PORTB_BASE,0};
+IOPort PC = {SYSIOC,PORTC_BASE,0};
+IOPort PD = {SYSIOD,PORTD_BASE,0};
+IOPort PE = {SYSIOE,PORTE_BASE,0};
+IOPort PF = {SYSIOF,PORTF_BASE,0};
+IOPort PG = {SYSIOG,PORTG_BASE,0};
+IOPort PH = {SYSIOH,PORTH_BASE,0};
+IOPort PJ = {SYSIOJ,PORTJ_BASE,0};
+
+
+digPin PF1,PF2,PF3;
+digPin PE1,PE2,PE4;
+digPin PB0,PB1;
+digPin PC5;
+
+// Buttons(UP,DOWN,LEFT,RIGHT)
+digPin PE0,PD2,PF4,PF0;
+
+// Semaphore, mutex and queue
+xSemaphoreHandle g_pUARTMutex;
+xSemaphoreHandle g_pADCSemaphore;
+xSemaphoreHandle g_pPIDSemaphore;
+QueueHandle_t g_height_Queue;
+QueueHandle_t g_yaw_Queue;
+
+int main(void);
+
+#endif

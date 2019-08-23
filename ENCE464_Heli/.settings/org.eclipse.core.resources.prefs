@@ -1,4 +1,6 @@
 eclipse.preferences.version=1
+encoding//Debug/From_steel/subdir_rules.mk=UTF-8
+encoding//Debug/From_steel/subdir_vars.mk=UTF-8
 encoding//Debug/drivers/subdir_rules.mk=UTF-8
 encoding//Debug/drivers/subdir_vars.mk=UTF-8
 encoding//Debug/makefile=UTF-8
@@ -8,6 +10,8 @@ encoding//Debug/old_code/subdir_vars.mk=UTF-8
 encoding//Debug/sources.mk=UTF-8
 encoding//Debug/subdir_rules.mk=UTF-8
 encoding//Debug/subdir_vars.mk=UTF-8
+encoding//Debug/tasks/subdir_rules.mk=UTF-8
+encoding//Debug/tasks/subdir_vars.mk=UTF-8
 encoding//Debug/third_party/FreeRTOS/Source/portable/CCS/ARM_CM4F/subdir_rules.mk=UTF-8
 encoding//Debug/third_party/FreeRTOS/Source/portable/CCS/ARM_CM4F/subdir_vars.mk=UTF-8
 encoding//Debug/third_party/FreeRTOS/Source/portable/MemMang/subdir_rules.mk=UTF-8

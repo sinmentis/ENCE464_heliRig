@@ -30,8 +30,8 @@
 // The priorities of the various tasks.
 //
 //*****************************************************************************
-#define PRIORITY_SWITCH_TASK    2
-#define PRIORITY_LED_TASK       1
-
+#define PRIORITY_CONTROLLER_TASK    3
+#define PRIORITY_SENSOR_TASK        4
+#define PRIORITY_UART_TASK          3
 
 #endif // __PRIORITIES_H__

@@ -15,7 +15,7 @@ led_task.obj: ../led_task.h
 led_task.obj: ../priorities.h
 led_task.obj: C:/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/FreeRTOS.h
 led_task.obj: C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.6.LTS/include/stddef.h
-led_task.obj: P:/Courses/ENCE464_freeRTOS/ENCE464_Heli/FreeRTOSConfig.h
+led_task.obj: C:/Users/sly31/ENCE464_heliRig/ENCE464_Heli/FreeRTOSConfig.h
 led_task.obj: C:/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/projdefs.h
 led_task.obj: C:/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/portable.h
 led_task.obj: C:/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/deprecated_definitions.h
@@ -41,7 +41,7 @@ C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.6.LTS/include/stdarg.h:
 ../priorities.h: 
 C:/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/FreeRTOS.h: 
 C:/ti/ccsv7/tools/compiler/ti-cgt-arm_16.9.6.LTS/include/stddef.h: 
-P:/Courses/ENCE464_freeRTOS/ENCE464_Heli/FreeRTOSConfig.h: 
+C:/Users/sly31/ENCE464_heliRig/ENCE464_Heli/FreeRTOSConfig.h: 
 C:/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/projdefs.h: 
 C:/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/portable.h: 
 C:/ti/TivaWare_C_Series-2.1.4.178/third_party/FreeRTOS/Source/include/deprecated_definitions.h: 
